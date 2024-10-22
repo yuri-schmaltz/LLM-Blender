@@ -269,6 +269,8 @@ print(comparison_results)
 pip install -e .[train]
 ```
 
+To use the unified feedback, run `git submodule update --init --recursive` and `cd data/UnifiedFeedback` to check the README and download the dataset.
+
 See more details in [`train_ranker.sh`](./train_ranker.sh)
 
 Please follow the guide in the script to train the ranker.
