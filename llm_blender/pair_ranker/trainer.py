@@ -40,11 +40,11 @@ class FiDTrainer(Seq2SeqTrainer):
         if self.label_smoother is not None and "labels" in inputs:
             labels = inputs.pop("labels")
         else:
-            labels = None
+            labels = inputs.get("labels")
         outputs = model(
             input_ids=inputs["input_ids"],
             attention_mask=inputs["attention_mask"],
-            labels=inputs["labels"],
+            labels=labels,
         )
 
         # Save past state if it exists
@@ -60,9 +60,9 @@ class FiDTrainer(Seq2SeqTrainer):
 
         if self.model.config.use_aux_loss:
             if isinstance(self.model, torch.nn.parallel.DistributedDataParallel):
-                _, aux_loss = self.model.module.compute_auxiliary_loss(input["scores"])
+                _, aux_loss = self.model.module.compute_auxiliary_loss(inputs["scores"])
             else:
-                _, aux_loss = self.model.compute_auxiliary_loss(input["scores"])
+                _, aux_loss = self.model.compute_auxiliary_loss(inputs["scores"])
             loss += aux_loss
 
         return (loss, outputs) if return_outputs else loss
